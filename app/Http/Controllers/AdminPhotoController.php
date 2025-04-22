@@ -17,7 +17,6 @@ class AdminPhotoController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -25,10 +24,8 @@ class AdminPhotoController extends Controller
             'category' => 'nullable|string',
         ]);
 
-        // Cari foto yang ingin diedit
         $photo = Photo::findOrFail($id);
 
-        // Update judul dan deskripsi
         $photo->title = $request->input('title');
         $photo->description = $request->input('description');
 
@@ -45,7 +42,6 @@ class AdminPhotoController extends Controller
 
         $photo->save();
 
-        // Redirect ke halaman dashboard atau daftar foto
         return redirect()->route('admin.dashboard')->with('success', 'Foto berhasil diperbarui!');
     }
 

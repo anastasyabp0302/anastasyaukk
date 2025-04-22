@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section
+@section('content')
 <div class="container mt-5">
     <h2>Edit Foto</h2>
 
@@ -22,7 +22,7 @@
             <div class="mb-3">
                 <label for="category" class="form-label">Kategori</label>
                 <select name="category" class="form-select">
-                    @foreach($categories ad $category)
+                    @foreach($categories as $category)
                         <option value="{{ $category }}" {{ $photo->category == $category ? 'selected' : '' }}>
                             {{ ucfirst($category) }}
                         </option>

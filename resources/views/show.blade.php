@@ -28,7 +28,7 @@
 
     <h5>Komentar ({{ $photo->comments->count() }})</h5>
     <ul class="list-group mb-3" id="commentlist">
-        @foreach($photos->comments as $comment)
+        @foreach($photo->comments as $comment)
              <li class="list-group-item">
                 <strong>{{ $comment->user->name }}</strong><br>
                 <small class="text-muted">{{ $comment->created_at->diffForHumans() }}<small><br>

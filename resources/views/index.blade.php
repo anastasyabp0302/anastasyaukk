@@ -96,7 +96,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav align-items-center">
 
-                <li class="nav-item dropdown me-3">
+            <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle" href="#" style="color: #c084fc;" data-bs-toggle="dropdown">Kategori</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('photos.index') }}">Semua</a></li>
@@ -144,29 +144,24 @@
         <div class="input-group w-50 shadow-sm">
             <input type="search" name="q" value="{{ request('q') }}" class="form-control rounded-start-pill px-4" placeholder="Cari foto lucu...">
             <input type="hidden" name="category" value="{{ request('category') }}">
-            <button class="btn px-4 rounded-end-pill text-white" style="background-color: #c084fc;" type="submit">Cari 💫</button>
+            <button class="btn px-4 rounded-end-pill text-white" style="background-color: #c084fc;" type="submit">Cari </button>
         </div>
     </form>
 </div>
 
-
-<div class="container mt-4">
-   
-
 <div class="masonry">
     @foreach ($photos as $photo)
-        <div class="photo-card">
-            <a href="{{ route('photos.show', $photo->id) }}">
-                <img src="{{ asset('storage/' . $photo->image_path) }}" alt="{{ $photo->title }}">
-                <div class="overlay">
-                    <h5>{{ $photo->title }}</h5>
-                    <small>Diunggah oleh: {{ $photo->user->name }}</small>
-                </div>
-            </a>
-        </div>
-    @endforeach
+    <div class="photo-card">
+        <a href="{{ route('photos.show', $photo->id) }}">
+            <img src="{{ asset('storage/' . $photo->image_path) }}" alt="{{ $photo->title }}">
+            <div class="overlay">
+                <h5>{{ $photo->title }}</h5>
+                <small>Diunggah oleh: {{ $photo->user->name }}</small>
 </div>
-
+</a>
+</div>
+ @endforeach
+</div>
 </div>
 
 @endsection

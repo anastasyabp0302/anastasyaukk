@@ -101,15 +101,19 @@ public function update(Request $request, Photo $photo)
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
+    $photo->title = $validated['title'];
+    $photo->description = $validated['description'];
+    $photo->category = $validated['category'];
+
     if ($request->hasFile('image')) {
         if ($photo->image_path) {
-            Storage::delete('public/' . $photo->image_path);
+            Storage::disk('public')->delete($photo->image_path);
         }
 
-        $validated['image_path'] = $request->file('image')->store('photos', 'public');
+        $photo->image_path = $request->file('image')->store('photos', 'public');
     }
 
-    $photo->update($validated);
+    $photo->save();
 
     return redirect()->route('photos.index')->with('success', 'Foto berhasil diperbarui!');
 }

@@ -8,13 +8,11 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    // Tampilkan halaman register
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // Proses registrasi user baru
     public function register(Request $request)
     {
         $request->validate([
@@ -23,43 +21,41 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        // Membuat user baru
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),  // Jangan lupa encrypt password!
+            'password' => bcrypt($request->password), 
+            'role' => 'user',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
-    // Tampilkan halaman login
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:6',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            if (auth()->user()->is_admin) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
-            } else {
-                return redirect()->route('photos.index');
             }
+            return redirect()->route('photos.index');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah!']);
+        return back()->withErrors(['email' => 'Invalid credentials']);
     }
+    
 
 
-    // Logout user
     public function logout()
     {
         Auth::logout();

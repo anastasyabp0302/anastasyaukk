@@ -1,6 +1,25 @@
 @extends('layouts.app')
 
 @section('title', $photo->title)
+<style>
+    .card {
+        border-radius: 15px;
+        border: 1px solid #eaeaea;
+    }
+
+    #commentList li {
+        font-size: 0.95rem;
+    }
+
+    .btn-link.text-danger {
+        font-size: 0.85rem;
+        text-decoration: none
+    }
+
+    .btn-link.text-danger:hover {
+        text-decoration: underline;
+    }
+    </style>
 
 @section('content')
 <div class="container mt-5">
@@ -26,18 +45,30 @@
                 </form>
             </div>
 
-    <h5>Komentar ({{ $photo->comments->count() }})</h5>
-    <ul class="list-group mb-3" id="commentlist">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Komentar ({{ $photo->comments->count() }})</h5>
+
+    <ul class="list-unstyled" id="commentList">
         @foreach($photo->comments as $comment)
-             <li class="list-group-item">
-                <strong>{{ $comment->user->name }}</strong><br>
-                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}<small><br>
-                {{ $comment->comment }}
+             <li class="mb-3 d-flex justify-content-between align-items-start border-bottom pb-2">
+                <div>
+                <span><strong>{{ $comment->user->name }}</strong> {{ $comment->comment }}</span><br>
+                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}<small>
+                </div>
+
+                @if (auth()->check() && auth()->id() === $comment->user_id)
+                <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-2">Hapus</button>
+                </form>
+                @endif
             </li>
         @endforeach
     </ul>
 
-    <form id="commentsForm" action="{{ route('photos.comment', $photo->id) }}" method="POST">
+    <form id="commentForm" action="{{ route('photos.comment', $photo->id) }}" method="POST">
         @csrf
         <div class="input-group">
             <input type="text" id="commentInput" name="comment" class="form-controll rounded-start-pill" placeholder="Tambahkan komentar..." required>

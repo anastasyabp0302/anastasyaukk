@@ -96,7 +96,6 @@
     }
 </style>
 
-<!-- Navbar Stylish -->
 <nav class="navbar navbar-expand-lg" style="background-color: #fff0f6; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
     <div class="container py-2">
         <a class="navbar-brand fw-bold" href="{{ route('photos.index') }}" style="color: #f472b6;">📷 Gallery</a>
@@ -108,7 +107,6 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav align-items-center">
 
-                <!-- User -->
                 @auth
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
@@ -137,6 +135,14 @@
 </nav>
 
 <div class="container mt-5">
+
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
     <div class="profile-card">
         <h2 class="mb-4">👤 Profil Saya</h2>
 

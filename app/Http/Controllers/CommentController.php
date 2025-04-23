@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function destroy($id)
-    {
-        $comment = Comment::findOrFail($id);
+    public function destroy(Comment $comment)
+    { 
+        if (auth()->id() !== $comment->user_id) {
+            abort(403, 'Kamu tidak diizinkan menghapus komentar ini.');
+        }
 
         $comment->delete();
-
-        return redirect()->back()->with('success', 'Komentar berhasil dihapus!');
+        return back()->with('success', 'Komentar berhasil dihapus.');
+        
     }
 
     public function reply(Request $request, $commentId)

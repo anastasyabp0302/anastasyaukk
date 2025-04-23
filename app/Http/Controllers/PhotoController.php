@@ -33,6 +33,7 @@ class PhotoController extends Controller
     
     $categories = Photo::select('category')->distinct()->pluck('category')->toArray();
     
+
     if (empty($categories)) {
         $categories = ['default']; 
     }
@@ -45,7 +46,7 @@ public function store(Request $request)
 {
     $request->validate([
         'title' => 'required|string|max:255',
-        'description' => 'required|string',
+        'description' => 'nullable|string',
         'category' => 'required|string|max:100',
         'image' => 'required|image|mimes:jpg,jpeg,png|max:5120', 
     ]);
@@ -55,12 +56,16 @@ public function store(Request $request)
     Photo::create([
         'title' => $request->title,
         'description' => $request->description,
-        'image_path' => $path, 
+        'image_path' => $path,
         'category' => $request->category,
         'user_id' => auth()->id(), 
     ]);
 
-    return redirect()->route('admin.dashboard')->with('success', 'Foto berhasil diupload!');
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard')->with('success', 'Foto berhasil diunggah');
+    } else {
+        return redirect()->route('profile')->with('success', 'Foto berhasil diunggah');
+    }
 }
 
 
@@ -77,9 +82,8 @@ public function show($id)
 public function edit($id)
 {
     $photo = Photo::findOrFail($id);
-
     if ($photo->user_id !== auth()->id() && !auth()->user()->is_admin) {
-        return redirect()->route('user.dashboard')->with('error', 'Anda tidak punya izin untuk mengedit foto ini.');
+        return redirect()->route('photos.index')->with('error', 'Anda tidak punya izin untuk mengedit foto ini.');
     }
 
     $categories = Photo::select('category')->distinct()->pluck('category')->toArray();
@@ -91,7 +95,7 @@ public function edit($id)
 public function update(Request $request, Photo $photo)
 {
     if (!Auth::user()->is_admin && $photo->user_id !== Auth::id()) {
-        return redirect()->route('user.dashboard')->with('error', 'Anda tidak memiliki izin untuk memperbarui foto ini.');
+        return redirect()->route('photos.index')->with('error', 'Anda tidak memiliki izin untuk memperbarui foto ini.');
     }
 
     $validated = $request->validate([
@@ -101,28 +105,24 @@ public function update(Request $request, Photo $photo)
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
-    $photo->title = $validated['title'];
-    $photo->description = $validated['description'];
-    $photo->category = $validated['category'];
-
     if ($request->hasFile('image')) {
         if ($photo->image_path) {
-            Storage::disk('public')->delete($photo->image_path);
+            Storage::delete('public/' . $photo->image_path);
         }
 
-        $photo->image_path = $request->file('image')->store('photos', 'public');
+        $validated['image_path'] = $request->file('image')->store('photos', 'public');
     }
 
-    $photo->save();
+    $photo->update($validated);
 
-    return redirect()->route('photos.index')->with('success', 'Foto berhasil diperbarui!');
+    return redirect()->route('profile')->with('success', 'Foto berhasil diperbarui!');
 }
    
 
 
 public function create()
 {
-    $categories = ['manusia', 'makanan', 'pemandangan', 'kecantikan', 'random'];
+    $categories = ['manusia', 'makanan', 'hewan', 'pemandangan', 'kecantikan', 'random'];
     return view('create', compact('categories'));
 }
 
@@ -133,7 +133,7 @@ public function like($id)
     $like = $photo->likes()->where('user_id', auth()->id())->first();
 
     if ($like) {
-        $like->delete(); 
+        $like->delete();
     } else {
         $photo->likes()->create(['user_id' => auth()->id()]);
     }
@@ -192,7 +192,7 @@ public function destroy($id)
     $photo = Photo::findOrFail($id);
 
     if ($photo->user_id !== auth()->id() && !auth()->user()->is_admin) {
-        return redirect()->route('user.dashboard')->with('error', 'Anda tidak punya izin untuk menghapus foto ini.');
+        return redirect()->route('photos.index')->with('error', 'Anda tidak punya izin untuk menghapus foto ini.');
     }
 
     $photo->delete();
@@ -206,6 +206,4 @@ public function welcome()
     $photos = Photo::with('user')->latest()->get();
     return view('welcome', compact('photos'));
 }
-
-
 }   

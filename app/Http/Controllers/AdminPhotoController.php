@@ -9,6 +9,17 @@ use App\Models\User;
 
 class AdminPhotoController extends Controller
 {
+    public function index()
+    {
+        $photos = Photo::with(['likes', 'comments'])->latest()->get();
+
+        $categories = Photo::select('category')->distinct()->pluck('category')->toArray();
+        if (empty($categories)) {
+            $categories = ['default'];
+        }
+        return view('admin.dashboard', compact('photos', 'categories'));
+    }
+    
     public function edit($id)
     {
         $photo = Photo::findOrFail($id);
@@ -55,7 +66,7 @@ class AdminPhotoController extends Controller
 
     public function show($id)
     {
-        $photo = Photo::with(['likes.user'])->findOrFail($id);
+        $photo = Photo::with(['likes.user', 'comments.user', 'comments.replies'])->findOrFail($id);
         $comments = $photo->comments()
             ->whereNull('parent_id')
             ->with('replies.user', 'user')
@@ -68,7 +79,7 @@ class AdminPhotoController extends Controller
     public function listUsers()
     {
         $users = User::all();
-        return view('admin.users', compact('users'));
+        return view('admin.user', compact('users'));
     }
 
 

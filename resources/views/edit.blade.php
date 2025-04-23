@@ -9,7 +9,7 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label for="title" class="form-label">Label</label>
+            <label for="title" class="form-label">Judul</label>
             <input type="text" class="form-control" name="title" value="{{ old('title', $photo->title)}}" required>
         </div>
 

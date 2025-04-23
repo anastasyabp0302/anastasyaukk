@@ -100,14 +100,17 @@
                     <a class="nav-link dropdown-toggle" href="#" style="color: #c084fc;" data-bs-toggle="dropdown">Kategori</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('photos.index') }}">Semua</a></li>
+                        @isset($categories)
                         @foreach ($categories as $kategori)
                             <li>
-                                <a class="dropdown-item {{ request('category') == $kategori ? 'active' : '' }}" 
-                                   href="{{ route('photos.index', ['category' => $kategori]) }}">
+                                <a class="dropdown-item {{ request('category') == $kategori ? 'active' : '' }}"
+                                    href="{{ route('photos.index', ['category' => $kategori]) }}">
                                     {{ ucfirst($kategori) }}
                                 </a>
                             </li>
                         @endforeach
+                        @endisset
+
                     </ul>
                 </li>
 

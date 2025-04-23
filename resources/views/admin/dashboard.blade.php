@@ -4,7 +4,7 @@
 
 <nav class="navbar navbar-expand-lg" style="background-color: #fff0f6; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
     <div class="container py-2">
-        <a class="navbar-brand fw-bold" href="#" style="color: #f472b6;"> Dashboard Admin</a>
+        <a class="navbar-brand fw-bold" href="#" style="color: #f472b6;">📊 Dashboard Admin</a>
 
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav align-items-center">
@@ -14,7 +14,7 @@
                         <span style="color: #c084fc;">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('admin.users') }}">Daftar Akun</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.user') }}">Daftar Akun</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
@@ -30,7 +30,7 @@
 </nav>
 
 <div class="container mt-4">
-    <h3 class="mb-3 fw-bold"> Semua Foto</h3>
+    <h3 class="mb-3 fw-bold">📸 Semua Foto</h3>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -58,7 +58,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item text-warning" href="{{ route('photos.edit', $photo->id) }}">✏️ Edit</a>
+                                <a class="dropdown-item text-warning" href="{{ route('admin.edit', $photo->id) }}">✏️ Edit</a>
                             </li>
                             <li>
                                 <form action="{{ route('photos.destroy', $photo->id) }}" method="POST" onsubmit="return confirm('Yakin hapus foto ini?')">

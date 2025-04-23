@@ -2,7 +2,6 @@
 
 @section('content')
 
-<!-- Navbar Admin -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#">Dashboard Admin</a>
@@ -14,13 +13,11 @@
 </nav>
 
 <div class="container mt-5">
-    <!-- Tombol Kembali ke Dashboard -->
     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary mb-4">
         ← Kembali ke Dashboard
     </a>
 
     <div class="row">
-        <!-- Kolom Kiri: Foto -->
         <div class="col-md-7 mb-4">
             <div class="card shadow-sm border-0">
                 <img src="{{ asset('storage/' . $photo->image_path) }}" class="card-img-top rounded" alt="{{ $photo->title }}">
@@ -32,9 +29,7 @@
             </div>
         </div>
 
-        <!-- Kolom Kanan: Likes & Komentar -->
         <div class="col-md-5">
-            <!-- Likes -->
             <div class="card shadow-sm mb-4 border-0">
                 <div class="card-header bg-white fw-bold">
                     ❤️ Disukai oleh ({{ $photo->likes->count() }})
@@ -48,7 +43,6 @@
                 </ul>
             </div>
 
-            <!-- Komentar -->
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white fw-bold">
         💬 Komentar ({{ $photo->comments->count() }})
@@ -69,7 +63,6 @@
                 </div>
                 <p class="mt-2 mb-1">{{ $comment->comment }}</p>
 
-                <!-- Form Balas -->
                 <form action="{{ route('comments.reply', $comment->id) }}" method="POST" class="mt-2">
                     @csrf
                     <div class="input-group input-group-sm">
@@ -78,7 +71,6 @@
                     </div>
                 </form>
 
-                <!-- Balasan -->
                 @foreach ($comment->replies as $reply)
                     <div class="mt-3 ms-4 p-2 border-start border-2">
                         <div class="d-flex justify-content-between align-items-start">

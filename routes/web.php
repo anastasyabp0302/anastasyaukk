@@ -33,17 +33,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 });
 
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->name('admin.')->group(function () {
-
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/admin/dashboard', [AdminPhotoController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/photos/{id}/edit', [AdminPhotoController::class, 'edit'])->name('photos.edit');
     Route::put('/photos/{id}', [AdminPhotoController::class, 'update'])->name('photos.update');
     Route::delete('/photos/{id}', [AdminPhotoController::class, 'destroy'])->name('photos.destroy');
-    Route::get('/photos/{id}', [AdminPhotoController::class, 'show'])->name('photos.show');
+    Route::get('/photos/{id}', [AdminPhotoController::class, 'show'])->name('admin.photos.show');
 
-    Route::get('/users', [AdminPhotoController::class, 'listUsers'])->name('users');
+    Route::get('/users', [AdminPhotoController::class, 'listUsers'])->name('admin.user');
 });
 
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', [AdminPhotoController::class, 'index'])->name('admin.dashboard');
+});
+
+Route::get('/admin/photos/edit/{id}', [AdminPhotoController::class, 'edit'])->name('admin.edit');
+
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

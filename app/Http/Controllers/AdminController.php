@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $photos = Photo::latest()->get();
+        $photos = Photo::with(['likes', 'comments'])->latest()->get();
         return view('admin.dashboard', compact('photos'));
     }
     
